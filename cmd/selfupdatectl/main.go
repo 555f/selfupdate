@@ -49,7 +49,6 @@ func createUpdate(path string, platform string) {
 	}
 	var buf bytes.Buffer
 	w := gzip.NewWriter(&buf)
-	defer w.Close() // You must close this first to flush the bytes to the buffer.
 
 	f, err := os.ReadFile(path)
 	if err != nil {
@@ -59,6 +58,8 @@ func createUpdate(path string, platform string) {
 	if err != nil {
 		panic(err)
 	}
+
+	w.Close() // You must close this first to flush the bytes to the buffer.
 
 	err = os.WriteFile(filepath.Join(genDir, version, platform+".gz"), buf.Bytes(), 0755)
 	if err != nil {
